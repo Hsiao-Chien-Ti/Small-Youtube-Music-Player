@@ -13,23 +13,30 @@ class main_interface(QWidget):
     def initUI(self):
         self.stack=QStackedWidget(self)
         main=mainUI()
-        loop=loopUI()
+        self.loop=loopUI()
         singer=singerUI()
-        atmo=atmoUI()        
-        self.stack.addWidget(loop)
+        atmo=atmoUI()
+        self.player=play_song.play_song()        
+        self.stack.addWidget(self.loop)
         self.stack.addWidget(singer)
         self.stack.addWidget(atmo)
         self.stack.addWidget(main)
-        loop.home.clicked.connect(self.GoHome)
+        self.loop.home.clicked.connect(self.GoHome)
         singer.home.clicked.connect(self.GoHome)
         atmo.home.clicked.connect(self.GoHome)
-        main.btn1.clicked.connect(lambda:self.stack.setCurrentWidget(loop))
+        main.btn1.clicked.connect(lambda:self.stack.setCurrentWidget(self.loop))
         main.btn2.clicked.connect(lambda:self.stack.setCurrentWidget(singer))
         main.btn3.clicked.connect(lambda:self.stack.setCurrentWidget(atmo))
+        self.loop.search.clicked.connect(lambda:self.search())
         self.setLayout=self.stack
         self.GoHome()
     def GoHome(self):
         self.stack.setCurrentIndex(3)
+    def search(self):
+        song=self.loop.song.text()
+        self.player.end()
+        self.player.search(song)
+        self.player.play()
         
 class loopUI(QWidget):
     def __init__(self):
@@ -37,14 +44,20 @@ class loopUI(QWidget):
         self.initUI()
     def initUI(self):
         super().__init__()
-        layout=QHBoxLayout()
-        layout.addWidget(QLabel("Search"))
-        layout.addWidget(QLineEdit())
+        Vlayout=QVBoxLayout()
+        Hlayout=QHBoxLayout()
+        Hlayout.addWidget(QLabel("歌名"))
+        self.song=QLineEdit(self)
+        Hlayout.addWidget(self.song)
         self.home=QPushButton(self)
         self.home.setText("home")
         self.home.setIcon(QIcon('./img/home.png'))
-        layout.addWidget(self.home)
-        self.setLayout(layout)
+        self.search=QPushButton(self)
+        self.search.setText("Search")
+        Hlayout.addWidget(self.search)
+        Vlayout.addLayout(Hlayout)
+        Vlayout.addWidget(self.home)
+        self.setLayout(Vlayout)
 class singerUI(QWidget):
     def __init__(self):
         super().__init__()
