@@ -1,21 +1,26 @@
 import sys
 import play_song
+import load_data
+import loopUI
+import singerUI
+import atmoUI
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 
 class main_interface(QWidget):
     def __init__(self):
         super().__init__()
+        self.sql=load_data.load_data()
         self.initUI()        
-        self.setGeometry(300, 300, 300, 200)
+        self.setGeometry(400, 200, 300, 400)
         self.setWindowTitle('Concentrate Youtube')
         self.show()
     def initUI(self):
         self.stack=QStackedWidget(self)
         main=mainUI()
-        self.loop=loopUI()
-        singer=singerUI()
-        atmo=atmoUI()
+        self.loop=loopUI.loopUI()
+        singer=singerUI.singerUI()
+        atmo=atmoUI.atmoUI()
         self.player=play_song.play_song()        
         self.stack.addWidget(self.loop)
         self.stack.addWidget(singer)
@@ -28,64 +33,27 @@ class main_interface(QWidget):
         main.btn2.clicked.connect(lambda:self.stack.setCurrentWidget(singer))
         main.btn3.clicked.connect(lambda:self.stack.setCurrentWidget(atmo))
         self.loop.search.clicked.connect(lambda:self.search())
+        self.loop.play.clicked.connect(lambda:self.play())
         self.setLayout=self.stack
         self.GoHome()
     def GoHome(self):
         self.stack.setCurrentIndex(3)
     def search(self):
         song=self.loop.song.text()
+        songlist,self.link=self.sql.search(song)
+        self.loop.songlist.clear()
+        for s in songlist:
+            self.loop.songlist.addItem(s)
+        print(self.loop.songlist.count())
+        self.loop.songlist.setVisible(True)
+        self.loop.play.setVisible(True)
+    def play(self):
         self.player.end()
-        self.player.search(song)
+        i=self.loop.songlist.currentIndex().row()
+        print(i)
+        self.player.url=self.link[i]
         self.player.play()
-        
-class loopUI(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-    def initUI(self):
-        super().__init__()
-        Vlayout=QVBoxLayout()
-        Hlayout=QHBoxLayout()
-        Hlayout.addWidget(QLabel("歌名"))
-        self.song=QLineEdit(self)
-        Hlayout.addWidget(self.song)
-        self.home=QPushButton(self)
-        self.home.setText("home")
-        self.home.setIcon(QIcon('./img/home.png'))
-        self.search=QPushButton(self)
-        self.search.setText("Search")
-        Hlayout.addWidget(self.search)
-        Vlayout.addLayout(Hlayout)
-        Vlayout.addWidget(self.home)
-        self.setLayout(Vlayout)
-class singerUI(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-    def initUI(self):
-        super().__init__()
-        layout=QHBoxLayout()
-        layout.addWidget(QLabel("Search"))
-        layout.addWidget(QLineEdit())
-        self.home=QPushButton(self)
-        self.home.setText("home")
-        self.home.setIcon(QIcon('./img/home.png'))
-        layout.addWidget(self.home)
-        self.setLayout(layout)
-class atmoUI(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-    def initUI(self):
-        super().__init__()
-        layout=QHBoxLayout()
-        layout.addWidget(QLabel("Search"))
-        layout.addWidget(QLineEdit())
-        self.home=QPushButton(self)
-        self.home.setText("home")
-        self.home.setIcon(QIcon('./img/home.png'))
-        layout.addWidget(self.home)
-        self.setLayout(layout)
+
 class mainUI(QWidget):
     def __init__(self):
         super().__init__()
