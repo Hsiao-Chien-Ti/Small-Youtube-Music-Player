@@ -34,6 +34,7 @@ class main_interface(QWidget):
         main.btn3.clicked.connect(lambda:self.stack.setCurrentWidget(atmo))
         self.loop.search.clicked.connect(lambda:self.search())
         self.loop.play.clicked.connect(lambda:self.play())
+        self.loop.pause.clicked.connect(lambda:self.pause())
         self.setLayout=self.stack
         self.GoHome()
     def GoHome(self):
@@ -53,6 +54,14 @@ class main_interface(QWidget):
         print(i)
         self.player.url=self.link[i]
         self.player.play()
+        self.loop.pause.setVisible(True)
+    def pause(self):
+        self.player.pause()
+        p=QIcon('./img/pause.png')
+        q=QIcon('./img/play.png')
+        if self.loop.pause.icon==p:
+            self.loop.pause.setIcon(q)
+    
 
 class mainUI(QWidget):
     def __init__(self):
