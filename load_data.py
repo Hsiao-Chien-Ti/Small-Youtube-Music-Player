@@ -4,11 +4,11 @@ class load_data():
         self.cnx = mysql.connector.connect(user='Adi', password='Adicoco0410',database='song_data')
         self.cursor=self.cnx.cursor()
     def search(self,song):
-        query=("SELECT * FROM songlist WHERE song=")
-        query=query+'\''+song+'\''
+        query=("SELECT * FROM songlist WHERE song like ")
+        query=query+'\'%'+song+'%\''
         print(query)
         self.cursor.execute(query)
-        for (song,singer,link) in self.cursor:
+        for (song,singer,CD,link) in self.cursor:
             self.Link=link
         return self.Link
 if __name__ == '__main__':
