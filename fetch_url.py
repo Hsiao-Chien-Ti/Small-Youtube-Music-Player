@@ -2,7 +2,7 @@ from pytube import Playlist,YouTube
 import re
 import mysql.connector
 
-playlist = Playlist("https://www.youtube.com/watch?v=S56Zzj-Nmww&list=PL9C2818276B0B3FC0")
+playlist = Playlist("https://www.youtube.com/watch?v=gd38-X3HpbM&list=PLj6NQzHFCvkGOAwI_ofdmAmWiEO2QhVp2")
 cnx = mysql.connector.connect(user='Adi', password='Adicoco0410',database='song_data')
 cursor=cnx.cursor()
 
@@ -18,7 +18,7 @@ for url in playlist.video_urls:
     # title=re.split('- ',yt.title)
     # print(url)
     query=("INSERT ignore INTO `songlist` VALUES(%s,%s,%s,%s)")
-    data=(yt.title,'五月天',None,url)
+    data=(yt.title,'林俊傑',None,url)
     cursor.execute(query,data)
 # url='https://www.youtube.com/watch?v=ChXiROKng30'
 # query=("INSERT ignore INTO `songlist` VALUES(%s,%s,%s,%s)")
