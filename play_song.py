@@ -10,7 +10,7 @@ class play_song():
         self.player = self.Instance.media_player_new()
     def end(self):
         if self.player.is_playing():
-            self.stop()
+            self.pause()
     def create(self):        
         self.video=pafy.new(self.url)
         self.best = self.video.getbestaudio()

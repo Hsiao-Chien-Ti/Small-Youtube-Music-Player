@@ -13,7 +13,8 @@ class loop_P_thread(QObject):
         self.player.create()
         self.show_pause.emit(1)
         self.player.play()
-
     def pause(self):
         self.player.pause()
         self.switch_pause.emit()
+    def stop(self):
+        self.player.end()

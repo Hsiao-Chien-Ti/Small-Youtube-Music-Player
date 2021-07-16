@@ -22,6 +22,13 @@ class loopUI(QWidget):
         self.pause=QPushButton(self)
         self.play.setText('play')
         self.pause.setIcon(QIcon('./img/pause.png'))
+
+        self.play.setStyleSheet("background-color:	#D7FFEE")
+        self.pause.setStyleSheet("background-color:	#D7FFEE")
+        self.songlist.setStyleSheet("background-color:	#D7FFEE")
+        self.home.setStyleSheet("background-color:	#D7FFEE")
+        self.search.setStyleSheet("background-color:	#D7FFEE")
+        self.song.setStyleSheet("background-color:	#D7FFEE")
         Vlayout.addLayout(Hlayout)
         Vlayout.addWidget(self.songlist)
         Vlayout.addWidget(self.play)

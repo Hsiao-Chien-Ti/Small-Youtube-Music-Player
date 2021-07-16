@@ -27,7 +27,7 @@ class main_interface(QWidget):
         self.link=[]
         self.pause_flag=False
         self.initUI()        
-        self.setGeometry(400, 200, 280, 700)
+        self.setGeometry(400, 200, 280, 500)
         self.setWindowTitle('Concentrate Youtube')
         self.show()
     def initUI(self):
@@ -83,10 +83,11 @@ class main_interface(QWidget):
         self.atmo.romantic.clicked.connect(lambda:self.search(3,'','romantic'))
         self.atmo.sad.clicked.connect(lambda:self.search(3,'','sad'))
         self.atmo.play.clicked.connect(lambda:self.play(3))
-        
-        self.singer.pause.clicked.connect(lambda:self.singer_p_thread.pause())
-        self.atmo.pause.clicked.connect(lambda:self.atmo_p_thread.pause())
-        self.loop.pause.clicked.connect(lambda:self.loop_p_thread.pause())
+
+        self.loop.pause.clicked.connect(lambda:self.pause(1))        
+        self.singer.pause.clicked.connect(lambda:self.pause(2))
+        self.atmo.pause.clicked.connect(lambda:self.pause(3))
+
         self.setLayout=self.stack
         self.GoHome()
         self.loop_thread.start()
@@ -119,14 +120,32 @@ class main_interface(QWidget):
             self.atmo.play.setVisible(True)
     def play(self,mode):
         if mode==1:
+            self.singer_p_thread.play_flag=False
+            self.singer_stop_sgn.emit()
+            self.atmo_p_thread.play_flag=False
+            self.atmo_stop_sgn.emit()
+            self.pause_flag=True
+            self.switch_pause()
             url=self.link[self.loop.songlist.currentIndex().row()]
             self.loop_play_sgn.emit(url)
         elif mode==2:
+            self.pause_flag=True
+            self.switch_pause()
             i=self.singer.songlist.currentIndex().row()
+            self.singer_p_thread.play_flag=False
             self.singer_stop_sgn.emit()
+            self.atmo_p_thread.play_flag=False
+            self.atmo_stop_sgn.emit()
+            self.loop_p_thread.stop()
             self.singer_play_sgn.emit(i,self.link)
         elif mode==3:
+            self.pause_flag=True
+            self.switch_pause()
+            self.singer_p_thread.play_flag=False
+            self.singer_stop_sgn.emit()
+            self.loop_p_thread.stop()
             i=self.atmo.songlist.currentIndex().row()
+            self.atmo_p_thread.play_flag=False
             self.atmo_stop_sgn.emit()
             self.atmo_play_sgn.emit(i,self.link)
 
@@ -137,7 +156,17 @@ class main_interface(QWidget):
             self.singer.pause.setVisible(True)
         elif mode==3:
             self.atmo.pause.setVisible(True)
+    def pause(self,mode):
+        if mode==1:
+            self.loop_p_thread.pause()
+        elif mode==2:
+            self.singer_p_thread.play_flag=False
+            self.singer_p_thread.pause()
+        elif mode==3:
+            self.atmo_p_thread.play_flag=False
+            self.atmo_p_thread.pause()
     def switch_pause(self):
+        print("switch")
         if self.pause_flag==False:
             self.loop.pause.setIcon(self.play_icon)
             self.singer.pause.setIcon(self.play_icon)
@@ -145,8 +174,8 @@ class main_interface(QWidget):
             self.pause_flag=True
         elif self.pause_flag==True:
             self.loop.pause.setIcon(self.pause_icon)
-            self.singer.pause.setIcon(self.play_icon)
-            self.atmo.pause.setIcon(self.play_icon)
+            self.singer.pause.setIcon(self.pause_icon)
+            self.atmo.pause.setIcon(self.pause_icon)
             self.pause_flag=False
 
 class mainUI(QWidget):
@@ -156,6 +185,7 @@ class mainUI(QWidget):
     def initUI(self):
         layout=QVBoxLayout()
         want=QLabel(self)
+        want.setFont(QFont("Berlin Sans FB Demi",16))
         want.setText("What do you want today?")
         want.move(10,10)
         want.resize(170,20)
@@ -166,9 +196,9 @@ class mainUI(QWidget):
         self.btn3=QPushButton("單一情緒")
         self.btn3.setStyleSheet("background-color:	#FF7575")
         layout.addWidget(want)
-        layout.addWidget(self.btn1,alignment=Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(self.btn2,alignment=Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(self.btn3,alignment=Qt.AlignmentFlag.AlignVCenter)
+        layout.addWidget(self.btn1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn3)
         self.setLayout(layout)
 
 if __name__ == '__main__':
