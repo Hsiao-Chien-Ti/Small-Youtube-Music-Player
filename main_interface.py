@@ -27,8 +27,8 @@ class main_interface(QWidget):
         self.link=[]
         self.pause_flag=False
         self.initUI()        
-        self.setGeometry(400, 200, 280, 500)
-        self.setWindowTitle('Concentrate Youtube')
+        self.setGeometry(400, 50, 280, 600)
+        self.setWindowTitle('Small Youtube Player')
         self.show()
     def initUI(self):
         self.stack=QStackedWidget(self)
@@ -76,6 +76,8 @@ class main_interface(QWidget):
         self.singer.nine.clicked.connect(lambda:self.search(2,'陳零九'))
         self.singer.jay.clicked.connect(lambda:self.search(2,'周杰倫'))
         self.singer.JJ.clicked.connect(lambda:self.search(2,'林俊傑'))
+        self.singer.eric.clicked.connect(lambda:self.search(2,'周興哲'))
+        self.singer.wolfs.clicked.connect(lambda:self.search(2,'五堅情'))
         self.singer.play.clicked.connect(lambda:self.play(2))
 
         self.atmo.aggressive.clicked.connect(lambda:self.search(3,'','aggressive'))
