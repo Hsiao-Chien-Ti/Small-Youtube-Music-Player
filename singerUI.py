@@ -41,15 +41,19 @@ class singerUI(QWidget):
         self.pause.setIcon(QIcon('./img/pause.png'))
 
         self.songlist=QListWidget(self)
-
+        self.songlist.setGeometry(0,250,250,300)
+        # self.songlist.setMinimumSize(QSize(300,300))
         self.home=QPushButton(self)
         self.home.setText("home")
         self.home.setIcon(QIcon('./img/home.png'))
+        
         layout.addLayout(singer_layout)
-        layout.addWidget(self.songlist)
+        layout.addWidget(self.songlist,alignment=Qt.AlignmentFlag.AlignBaseline)
         layout.addWidget(self.play)
         layout.addWidget(self.pause)
         layout.addWidget(self.home)
+        
         self.play.setVisible(False)
         self.pause.setVisible(False)
+        self.songlist.setVisible(False)
         self.setLayout(layout)

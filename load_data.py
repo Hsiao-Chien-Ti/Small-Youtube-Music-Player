@@ -10,7 +10,7 @@ class load_data():
         self.cursor.execute(query)
         song_list=[]
         link_list=[]
-        for (song,singer,CD,link) in self.cursor:
+        for (song,singer,CD,moods,link) in self.cursor:
             song_list.append(song)
             link_list.append(link)
         return song_list,link_list
@@ -21,7 +21,18 @@ class load_data():
         self.cursor.execute(query)
         song_list=[]
         link_list=[]
-        for (song,singer,CD,link) in self.cursor:
+        for (song,singer,CD,moods,link) in self.cursor:
+            song_list.append(song)
+            link_list.append(link)
+        return song_list,link_list
+    def search_mood(self,mood):
+        query=("SELECT * FROM songlist WHERE moods like ")
+        query=query+'\'%'+mood+'%\''
+        print(query)
+        self.cursor.execute(query)
+        song_list=[]
+        link_list=[]
+        for (song,singer,CD,moods,link) in self.cursor:
             song_list.append(song)
             link_list.append(link)
         return song_list,link_list
