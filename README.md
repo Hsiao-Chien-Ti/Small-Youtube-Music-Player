@@ -1,3 +1,7 @@
 # Small Youtube Player
-# Youtube url
+pafy+vlc
+PyQt6
+mySql
+machine learning(keras)
+csv+json
  
